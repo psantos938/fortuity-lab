@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import theme from '../styles/theme';
+import api from '../api';
 
 const LoginScreen = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -13,12 +14,14 @@ const LoginScreen = ({ onLogin }) => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
+      const response = await api.login({ username, password });
+      
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.message || 'Invalid credentials');
+        return;
+      }
+      
       const data = await response.json();
 
       if (data.success) {

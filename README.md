@@ -2,6 +2,8 @@
 
 ## 🚀 Quick Start Demo
 
+> **NEW!** See [QUICK-START.md](QUICK-START.md) for detailed setup instructions and [DEMO-ANALYSIS.md](DEMO-ANALYSIS.md) for complete system analysis.
+
 ### 1. Install Dependencies
 ```bash
 cd fortuity-witnessing-system
