@@ -15,6 +15,13 @@ const LoginScreen = ({ onLogin }) => {
 
     try {
       const response = await api.login({ username, password });
+      
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.message || 'Invalid credentials');
+        return;
+      }
+      
       const data = await response.json();
 
       if (data.success) {

@@ -33,7 +33,16 @@ start "Fortuity Lab Backend" cmd /k "npm start"
 
 REM Wait a moment for server to start
 echo ⏳ Waiting for server to be ready...
-timeout /t 5 /nobreak >nul
+timeout /t 8 /nobreak >nul
+
+REM Check if server is responding
+curl -s http://localhost:3001/health >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ⚠️  Warning: Backend server may not have started properly.
+    echo Please check the backend window for errors.
+    echo.
+    pause
+)
 echo.
 
 REM Ask user which demo to run

@@ -5,6 +5,20 @@
 
 set -e
 
+# Cleanup function
+cleanup() {
+    echo ""
+    echo "🛑 Shutting down..."
+    if [ ! -z "$BACKEND_PID" ] && ps -p $BACKEND_PID > /dev/null 2>&1; then
+        echo "Stopping backend server (PID: $BACKEND_PID)..."
+        kill $BACKEND_PID 2>/dev/null || true
+    fi
+    exit 0
+}
+
+# Set up trap to cleanup on exit
+trap cleanup EXIT INT TERM
+
 echo "🧪 Fortuity Lab - Demo Startup Script"
 echo "======================================"
 echo ""
@@ -49,13 +63,21 @@ else
     
     # Wait for server to be ready
     echo "⏳ Waiting for server to be ready..."
+    SERVER_READY=0
     for i in {1..10}; do
         if curl -s http://localhost:3001/health > /dev/null 2>&1; then
             echo "✅ Backend server is ready!"
+            SERVER_READY=1
             break
         fi
         sleep 1
     done
+    
+    if [ $SERVER_READY -eq 0 ]; then
+        echo "❌ Error: Backend server did not start properly."
+        echo "Please check the logs and try again."
+        exit 1
+    fi
     echo ""
 fi
 
